@@ -1,579 +1,191 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Physics System | JZ Science</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    font-family:'Inter',sans-serif;
-    background:#060816;
-    color:white;
-    overflow-x:hidden;
-}
-
-/* ===== 背景 ===== */
-
-.bg{
-    position:fixed;
-    inset:0;
-    background:
-    radial-gradient(circle at 20% 20%, rgba(0,119,255,0.18), transparent 30%),
-    radial-gradient(circle at 80% 30%, rgba(140,0,255,0.14), transparent 30%),
-    #060816;
-    z-index:-2;
-}
-
-.grid{
-    position:fixed;
-    inset:0;
-    background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size:42px 42px;
-    z-index:-1;
-}
-
-/* ===== header ===== */
-
-header{
-    position:fixed;
-    top:0;
-    width:100%;
-    padding:24px 8%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    backdrop-filter:blur(18px);
-    background:rgba(5,8,22,0.45);
-    border-bottom:1px solid rgba(255,255,255,0.05);
-    z-index:999;
-}
-
-.logo{
-    font-size:22px;
-    font-weight:700;
-}
-
-.logo span{
-    color:#5da9ff;
-}
-
-nav a{
-    text-decoration:none;
-    color:#98abd1;
-    margin-left:28px;
-    transition:0.3s;
-}
-
-nav a:hover{
-    color:white;
-}
-
-/* ===== hero ===== */
-
-.hero{
-    min-height:88vh;
-    display:flex;
-    align-items:center;
-    padding:0 8%;
-}
-
-.hero-inner{
-    display:grid;
-    grid-template-columns:1.3fr 0.7fr;
-    gap:60px;
-    align-items:center;
-    width:100%;
-}
-
-.tag{
-    display:inline-block;
-    padding:10px 18px;
-    border-radius:999px;
-    background:rgba(93,169,255,0.12);
-    border:1px solid rgba(93,169,255,0.25);
-    color:#84beff;
-    margin-bottom:28px;
-    font-size:14px;
-}
-
-.hero h1{
-    font-size:72px;
-    line-height:1.05;
-    margin-bottom:28px;
-}
-
-.gradient{
-    background:linear-gradient(to right,#5da9ff,#9f7bff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.hero p{
-    color:#97a9c7;
-    line-height:1.9;
-    font-size:18px;
-    max-width:720px;
-}
-
-/* ===== 力学球 ===== */
-
-.orbit-box{
-    position:relative;
-    width:340px;
-    height:340px;
-    margin:auto;
-}
-
-.center-core{
-    width:110px;
-    height:110px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#5da9ff,#7c5cff);
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:700;
-    box-shadow:0 0 40px rgba(93,169,255,0.45);
-}
-
-.orbit{
-    position:absolute;
-    inset:0;
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:50%;
-    animation:spin 18s linear infinite;
-}
-
-.node{
-    width:52px;
-    height:52px;
-    border-radius:50%;
-    background:#121c34;
-    border:1px solid rgba(93,169,255,0.3);
-    position:absolute;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#84beff;
-    font-size:13px;
-}
-
-.n1{top:-10px;left:50%;transform:translateX(-50%);}
-.n2{right:-10px;top:50%;transform:translateY(-50%);}
-.n3{bottom:-10px;left:50%;transform:translateX(-50%);}
-.n4{left:-10px;top:50%;transform:translateY(-50%);}
-
-@keyframes spin{
-    from{transform:rotate(0deg);}
-    to{transform:rotate(360deg);}
-}
-
-/* ===== section ===== */
-
-.section{
-    padding:120px 8%;
-}
-
-.section-title{
-    font-size:48px;
-    margin-bottom:18px;
-}
-
-.section-sub{
-    color:#8ea5ca;
-    line-height:1.8;
-    max-width:760px;
-    margin-bottom:60px;
-}
-
-/* ===== cards ===== */
-
-.cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:28px;
-}
-
-.card{
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.06);
-    border-radius:26px;
-    padding:32px;
-    transition:0.4s;
-    position:relative;
-    overflow:hidden;
-}
-
-.card::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(135deg, rgba(93,169,255,0.12), transparent);
-    opacity:0;
-    transition:0.4s;
-}
-
-.card:hover::before{
-    opacity:1;
-}
-
-.card:hover{
-    transform:translateY(-8px);
-    border-color:rgba(93,169,255,0.3);
-}
-
-.card h3{
-    margin-bottom:18px;
-    font-size:24px;
-}
-
-.card p{
-    color:#8ea5ca;
-    line-height:1.8;
-}
-
-.btn{
-    display:inline-block;
-    margin-top:24px;
-    padding:12px 20px;
-    border-radius:12px;
-    background:linear-gradient(135deg,#5da9ff,#7c5cff);
-    text-decoration:none;
-    color:white;
-    font-weight:600;
-    transition:0.3s;
-}
-
-.btn:hover{
-    transform:translateY(-3px);
-}
-
-/* ===== knowledge map ===== */
-
-.map{
-    margin-top:80px;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-    gap:24px;
-}
-
-.map-item{
-    padding:24px;
-    border-radius:22px;
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.05);
-}
-
-.map-item h4{
-    margin-bottom:16px;
-    color:#84beff;
-}
-
-.map-item ul{
-    list-style:none;
-}
-
-.map-item li{
-    margin-bottom:10px;
-    color:#8ea5ca;
-}
-
-/* ===== footer ===== */
-
-footer{
-    padding:60px 8%;
-    text-align:center;
-    color:#7184a6;
-    border-top:1px solid rgba(255,255,255,0.05);
-}
-
-/* ===== mobile ===== */
-
-@media(max-width:980px){
-
-.hero-inner{
-    grid-template-columns:1fr;
-}
-
-.hero h1{
-    font-size:52px;
-}
-
-.section-title{
-    font-size:40px;
-}
-
-.orbit-box{
-    width:260px;
-    height:260px;
-}
-
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>科学 · 物理体系 | JZ 学习中心</title>
+  <meta name="description" content="初中物理四大模块：力学、电学、电磁、光学与能量。知识树、学习路径与专题入口。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
 </head>
-
 <body>
-
-<div class="bg"></div>
-<div class="grid"></div>
-
-<header>
-
-<div class="logo">
-JZ <span>PHYSICS</span>
-</div>
-
-<nav>
-<a href="index.html">首页</a>
-<a href="#modules">模块</a>
-<a href="#knowledge">知识树</a>
-</nav>
-
-</header>
-
-<!-- HERO -->
-
-<section class="hero">
-
-<div class="hero-inner">
-
-<div>
-
-<div class="tag">
-Structure · Logic · Scientific Thinking
-</div>
-
-<h1>
-重新理解<br>
-<span class="gradient">物理世界</span>
-</h1>
-
-<p>
-物理并不是“背公式”，而是理解世界如何运行。
-本系统围绕力、运动、电场、磁场、能量与系统模型，
-帮助学生建立真正的结构化物理认知。
-</p>
-
-</div>
-
-<!-- 轨道图 -->
-
-<div class="orbit-box">
-
-<div class="orbit">
-
-<div class="node n1">力</div>
-<div class="node n2">电</div>
-<div class="node n3">磁</div>
-<div class="node n4">能</div>
-
-</div>
-
-<div class="center-core">
-Physics
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- MODULES -->
-
-<section class="section" id="modules">
-
-<h2 class="section-title">
-核心模块
-</h2>
-
-<p class="section-sub">
-从基础概念到压轴推导，
-建立完整的物理学习结构系统。
-</p>
-
-<div class="cards">
-
-<div class="card">
-<h3>⚙️ 力学系统</h3>
-
-<p>
-牛顿定律、受力分析、摩擦力、圆周运动、能量守恒、
-斜面模型与复杂运动分析。
-</p>
-
-<a href="#" class="btn">
-进入模块
-</a>
-
-</div>
-
-<div class="card">
-<h3>⚡ 电学系统</h3>
-
-<p>
-电流、电压、电阻、电功率、
-串并联、电路推导与动态电学分析。
-</p>
-
-<a href="#" class="btn">
-进入模块
-</a>
-
-</div>
-
-<div class="card">
-<h3>🧲 电磁系统</h3>
-
-<p>
-磁场、安培力、洛伦兹力、
-电场与带电粒子运动综合分析。
-</p>
-
-<a href="#" class="btn">
-进入模块
-</a>
-
-</div>
-
-<div class="card">
-<h3>🌌 光学与能量</h3>
-
-<p>
-凸透镜、反射折射、光路分析、
-机械能与能量转换模型。
-</p>
-
-<a href="#" class="btn">
-进入模块
-</a>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- KNOWLEDGE TREE -->
-
-<section class="section" id="knowledge">
-
-<h2 class="section-title">
-知识树系统
-</h2>
-
-<p class="section-sub">
-真正高阶的学习，不是“记忆碎片”，
-而是形成知识之间的连接网络。
-</p>
-
-<div class="map">
-
-<div class="map-item">
-
-<h4>力学结构</h4>
-
-<ul>
-<li>牛顿第一定律</li>
-<li>受力分析</li>
-<li>摩擦力</li>
-<li>圆周运动</li>
-<li>机械能守恒</li>
-</ul>
-
-</div>
-
-<div class="map-item">
-
-<h4>电学结构</h4>
-
-<ul>
-<li>欧姆定律</li>
-<li>串并联</li>
-<li>电功率</li>
-<li>焦耳热</li>
-<li>动态电路</li>
-</ul>
-
-</div>
-
-<div class="map-item">
-
-<h4>电磁结构</h4>
-
-<ul>
-<li>磁场方向</li>
-<li>左手定则</li>
-<li>洛伦兹力</li>
-<li>带电粒子轨迹</li>
-<li>复合场分析</li>
-</ul>
-
-</div>
-
-<div class="map-item">
-
-<h4>光学结构</h4>
-
-<ul>
-<li>反射</li>
-<li>折射</li>
-<li>凸透镜成像</li>
-<li>视力模型</li>
-<li>光路图</li>
-</ul>
-
-</div>
-
-</div>
-
-</section>
-    <div style="margin-top:40px; display:flex; gap:16px; flex-wrap:wrap;">
-
-<a href="index.html" style="color:#84beff;">← 返回首页</a>
-
-<a href="mechanics.html" style="
-padding:14px 22px;
-border-radius:12px;
-background:linear-gradient(135deg,#5da9ff,#7c5cff);
-color:white;
-text-decoration:none;
-font-weight:600;
-">
-进入力学系统
-</a>
-
-</div>
-
-<footer>
-
-JZ Physics System © 2026  
-Scientific Thinking · Structured Learning · Future Intelligence
-
-</footer>
-
+  <div class="site-bg" aria-hidden="true"></div>
+  <div class="site-grid" aria-hidden="true"></div>
+
+  <header>
+    <a class="logo" href="index.html">JZ <span>学习中心</span></a>
+    <nav>
+      <a href="index.html">首页</a>
+      <a href="physics.html">科学 · 物理</a>
+      <a href="math.html">数学</a>
+      <a href="contact.html#teachers">师资</a>
+      <a href="contact.html" class="nav-cta">预约咨询</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <p class="breadcrumb"><a href="index.html">首页</a> / 科学 · 物理</p>
+        <h1><span class="gradient">初中物理</span> 体系总览</h1>
+        <p class="lead" style="max-width:40rem;">
+          物理学习的本质是建立「现象—模型—定量—验证」的闭环。以下模块各自成页，便于按周计划与专题突破。
+        </p>
+        <div class="hero-actions" style="margin-top:1.75rem;">
+          <a class="btn btn-primary" href="mechanics.html">力学</a>
+          <a class="btn btn-ghost" href="electricity.html">电学</a>
+          <a class="btn btn-ghost" href="electromagnetism.html">电磁</a>
+          <a class="btn btn-ghost" href="optics-energy.html">光学与能量</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-block">
+      <div class="wrap two-col">
+        <div class="panel">
+          <h2>学习路径建议</h2>
+          <ul>
+            <li><strong style="color:#e8eefc;">第 1 阶段</strong> — 力学：受力与运动是基础语言。</li>
+            <li><strong style="color:#e8eefc;">第 2 阶段</strong> — 电学：掌握电路结构与能量视角。</li>
+            <li><strong style="color:#e8eefc;">第 3 阶段</strong> — 电磁：矢量方向与左手定则熟练度。</li>
+            <li><strong style="color:#e8eefc;">第 4 阶段</strong> — 光学与能量：实验作图 + 说理题表达。</li>
+            <li><strong style="color:#e8eefc;">综合</strong> — 跨模块情境题与探究型阅读。</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h2>能力维度</h2>
+          <div class="kpi-list">
+            <div class="kpi">
+              <span class="kpi-num">1</span>
+              <div><h4>概念辨析</h4><p>区分定义式与决定式，避免「公式背诵」误区。</p></div>
+            </div>
+            <div class="kpi">
+              <span class="kpi-num">2</span>
+              <div><h4>过程分析</h4><p>多过程问题拆段，明确每段受力与守恒量。</p></div>
+            </div>
+            <div class="kpi">
+              <span class="kpi-num">3</span>
+              <div><h4>图像与实验</h4><p>读图、作图、误差与变量控制的语言规范。</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0;">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title">四大模块入口</h2>
+          <p class="section-sub">点击卡片进入对应专题页，内含核心考点、典型模型与自测要点。</p>
+        </div>
+        <div class="cards">
+          <a class="card card-link" href="mechanics.html">
+            <h3>力学系统 <span class="arrow">→</span></h3>
+            <p>牛顿定律、受力分析、摩擦、圆周、功与能。</p>
+            <span class="btn btn-primary">进入</span>
+          </a>
+          <a class="card card-link" href="electricity.html">
+            <h3>电学系统 <span class="arrow">→</span></h3>
+            <p>电路、欧姆定律、电功率、动态电路。</p>
+            <span class="btn btn-primary">进入</span>
+          </a>
+          <a class="card card-link" href="electromagnetism.html">
+            <h3>电磁系统 <span class="arrow">→</span></h3>
+            <p>磁场、安培力、洛伦兹力、复合场。</p>
+            <span class="btn btn-primary">进入</span>
+          </a>
+          <a class="card card-link" href="optics-energy.html">
+            <h3>光学与能量 <span class="arrow">→</span></h3>
+            <p>透镜、光路、能量转化与效率。</p>
+            <span class="btn btn-primary">进入</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0;">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title">知识树</h2>
+        </div>
+        <div class="map-grid">
+          <div class="map-item">
+            <h4>力学</h4>
+            <ul>
+              <li>运动描述与参照系</li>
+              <li>力的效果与合成</li>
+              <li>二力平衡与牛顿第三定律</li>
+              <li>压强与浮力（衔接拓展）</li>
+            </ul>
+          </div>
+          <div class="map-item">
+            <h4>电学</h4>
+            <ul>
+              <li>电荷与电流</li>
+              <li>电阻定律与变阻器</li>
+              <li>串并联规律</li>
+              <li>家庭电路与安全</li>
+            </ul>
+          </div>
+          <div class="map-item">
+            <h4>电磁</h4>
+            <ul>
+              <li>电流的磁效应</li>
+              <li>电动机与发电机原理</li>
+              <li>电磁铁与应用</li>
+            </ul>
+          </div>
+          <div class="map-item">
+            <h4>光学 · 热 · 能</h4>
+            <ul>
+              <li>光的直线传播与反射</li>
+              <li>折射与透镜</li>
+              <li>内能与热机（衔接）</li>
+              <li>能量守恒表述</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="cta-strip">
+        <h2>科学课程咨询：13401361086 · zj186660@gmail.com</h2>
+        <a class="btn btn-primary" href="contact.html">完整联系方式</a>
+      </div>
+    </div>
+
+    <div class="wrap back-row">
+      <a href="index.html">← 返回首页</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="index.html">JZ <span>学习中心</span></a>
+        <p>科学（物理）体系化课程与答疑。</p>
+      </div>
+      <div class="footer-col">
+        <h4>模块</h4>
+        <a href="mechanics.html">力学</a>
+        <a href="electricity.html">电学</a>
+        <a href="electromagnetism.html">电磁</a>
+        <a href="optics-energy.html">光学与能量</a>
+      </div>
+      <div class="footer-col">
+        <h4>数学</h4>
+        <a href="math.html">数学体系</a>
+      </div>
+      <div class="footer-col">
+        <h4>科学老师</h4>
+        <p>13401361086</p>
+        <a href="mailto:zj186660@gmail.com">zj186660@gmail.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 JZ 学习中心</div>
+  </footer>
 </body>
 </html>
